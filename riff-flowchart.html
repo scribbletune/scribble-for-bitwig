@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Riff for Bitwig - Signal Flow Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a;
+            font-family: 'Arial', sans-serif;
+            overflow: auto;
+        }
+        .svg-container {
+            width: max-content;
+            height: max-content;
+            padding: 20px;
+        }
+        svg {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="svg-container">
+<svg width="1400" height="2300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Title -->
+    <text x="700" y="40" font-size="32" fill="#00ff88" text-anchor="middle" font-weight="bold">
+        RIFF FOR BITWIG - SIGNAL FLOW
+    </text>
+    
+    <!-- Bitwig Startup Section -->
+    <rect x="550" y="70" width="300" height="60" fill="#5a3a5a" stroke="#aa66ff" stroke-width="3" rx="10"/>
+    <text x="700" y="95" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">BITWIG STARTUP</text>
+    <text x="700" y="115" font-size="14" fill="#cccccc" text-anchor="middle">Controller Script Loaded</text>
+    
+    <!-- Arrow down -->
+    <line x1="700" y1="130" x2="700" y2="170" stroke="#aa66ff" stroke-width="3"/>
+    <polygon points="700,170 695,160 705,160" fill="#aa66ff"/>
+    
+    <!-- init() Function -->
+    <rect x="450" y="180" width="500" height="140" fill="#3a2a4a" stroke="#aa66ff" stroke-width="3" rx="10"/>
+    <text x="700" y="210" font-size="20" fill="#ffffff" text-anchor="middle" font-weight="bold">init()</text>
+    <text x="700" y="235" font-size="13" fill="#cccccc" text-anchor="middle">host.getDocumentState()</text>
+    <text x="700" y="255" font-size="13" fill="#cccccc" text-anchor="middle">host.createArrangerCursorClip(128, 128)</text>
+    <text x="700" y="280" font-size="12" fill="#aaaaff" text-anchor="middle">Define UI Parameters:</text>
+    <text x="700" y="298" font-size="11" fill="#cccccc" text-anchor="middle">Root Note • Octave • Scale • Mode • Scale Filter</text>
+    <text x="700" y="313" font-size="11" fill="#cccccc" text-anchor="middle">Chord Progression • Combination • Pattern Style</text>
+    
+    <!-- Arrow down -->
+    <line x1="700" y1="320" x2="700" y2="360" stroke="#aa66ff" stroke-width="3"/>
+    <polygon points="700,360 695,350 705,350" fill="#aa66ff"/>
+    
+    <!-- Signal Observer Setup -->
+    <rect x="500" y="370" width="400" height="80" fill="#3a2a4a" stroke="#aa66ff" stroke-width="3" rx="10"/>
+    <text x="700" y="400" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">Setup Signal Observer</text>
+    <text x="700" y="425" font-size="13" fill="#cccccc" text-anchor="middle">getSignalSetting('Generate Pattern')</text>
+    <text x="700" y="443" font-size="13" fill="#cccccc" text-anchor="middle">.addSignalObserver(function() {...})</text>
+    
+    <!-- Arrow down -->
+    <line x1="700" y1="450" x2="700" y2="490" stroke="#aa66ff" stroke-width="3"/>
+    <polygon points="700,490 695,480 705,480" fill="#aa66ff"/>
+    
+    <!-- Waiting State -->
+    <rect x="550" y="500" width="300" height="60" fill="#4a4a4a" stroke="#ffaa00" stroke-width="3" rx="10" stroke-dasharray="5,5"/>
+    <text x="700" y="525" font-size="16" fill="#ffaa00" text-anchor="middle" font-weight="bold">⏸ WAITING</text>
+    <text x="700" y="545" font-size="13" fill="#cccccc" text-anchor="middle">Script ready, UI visible</text>
+    
+    <!-- Arrow down (dashed to show it waits) -->
+    <line x1="700" y1="560" x2="700" y2="600" stroke="#ffaa00" stroke-width="3" stroke-dasharray="5,5"/>
+    <polygon points="700,600 695,590 705,590" fill="#ffaa00"/>
+    
+    <!-- User Input Section -->
+    <rect x="550" y="610" width="300" height="80" fill="#4a4a4a" stroke="#00ff88" stroke-width="3" rx="10"/>
+    <text x="700" y="645" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">USER INPUT</text>
+    <text x="700" y="670" font-size="14" fill="#cccccc" text-anchor="middle">Clicks "Generate!" Button</text>
+    
+    <!-- Arrow down -->
+    <line x1="700" y1="690" x2="700" y2="730" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="700,730 695,720 705,720" fill="#00ff88"/>
+    
+    <!-- Parameter Collection -->
+    <rect x="500" y="740" width="400" height="100" fill="#3a3a5a" stroke="#6666ff" stroke-width="3" rx="10"/>
+    <text x="700" y="770" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">PARAMETER COLLECTION</text>
+    <text x="700" y="795" font-size="12" fill="#cccccc" text-anchor="middle">buildScale(rootNote, scaleName)</text>
+    <text x="700" y="815" font-size="12" fill="#cccccc" text-anchor="middle">noteToMIDI() • filterScaleNotes()</text>
+    
+    <!-- Arrow down with split -->
+    <line x1="700" y1="840" x2="700" y2="880" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="700,880 695,870 705,870" fill="#00ff88"/>
+    
+    <!-- Mode Selection Diamond -->
+    <polygon points="700,900 800,950 700,1000 600,950" fill="#5a3a5a" stroke="#ff6666" stroke-width="3"/>
+    <text x="700" y="955" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">MODE?</text>
+    
+    <!-- Left branch - RIFFS -->
+    <line x1="600" y1="950" x2="350" y2="950" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="350,950 360,945 360,955" fill="#00ff88"/>
+    <text x="475" y="940" font-size="14" fill="#ffff00" font-weight="bold">RIFFS</text>
+    
+    <!-- Right branch - CHORDS -->
+    <line x1="800" y1="950" x2="1050" y2="950" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="1050,950 1040,945 1040,955" fill="#00ff88"/>
+    <text x="925" y="940" font-size="14" fill="#ffff00" font-weight="bold">CHORDS</text>
+    
+    <!-- ============ RIFFS PATH ============ -->
+    
+    <!-- expandCombinationWithNotes -->
+    <rect x="100" y="990" width="500" height="80" fill="#2a4a4a" stroke="#00ddff" stroke-width="3" rx="10"/>
+    <text x="350" y="1020" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">expandCombinationWithNotes()</text>
+    <text x="350" y="1045" font-size="12" fill="#cccccc" text-anchor="middle">For each letter in combination (A, A, A, B)</text>
+    
+    <line x1="350" y1="1070" x2="350" y2="1110" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1110 345,1100 355,1100" fill="#00ddff"/>
+    
+    <!-- Cache Check Diamond -->
+    <polygon points="350,1130 430,1180 350,1230 270,1180" fill="#3a3a5a" stroke="#ffaa00" stroke-width="3"/>
+    <text x="350" y="1175" font-size="14" fill="#ffffff" text-anchor="middle">Cached?</text>
+    <text x="350" y="1195" font-size="12" fill="#cccccc" text-anchor="middle">[letter]</text>
+    
+    <!-- NO - Generate new -->
+    <line x1="270" y1="1180" x2="150" y2="1180" stroke="#00ddff" stroke-width="3"/>
+    <text x="210" y="1170" font-size="12" fill="#ff6666" font-weight="bold">NO</text>
+    
+    <rect x="50" y="1290" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="150" y="1315" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">generateRandomPattern()</text>
+    <text x="150" y="1335" font-size="11" fill="#cccccc" text-anchor="middle">8 steps, patternStyle</text>
+    
+    <line x1="150" y1="1230" x2="150" y2="1290" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,1290 145,1280 155,1280" fill="#00ddff"/>
+    
+    <line x1="150" y1="1350" x2="150" y2="1410" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,1410 145,1400 155,1400" fill="#00ddff"/>
+    
+    <rect x="50" y="1420" width="200" height="80" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="150" y="1445" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">parseRiffPattern()</text>
+    <text x="150" y="1465" font-size="11" fill="#cccccc" text-anchor="middle">x → root | R → random</text>
+    <text x="150" y="1482" font-size="11" fill="#cccccc" text-anchor="middle">[...] → subdivide</text>
+    
+    <line x1="150" y1="1500" x2="150" y2="1560" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,1560 145,1550 155,1550" fill="#00ddff"/>
+    
+    <rect x="70" y="1570" width="160" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="150" y="1595" font-size="13" fill="#ffffff" text-anchor="middle">Cache Notes</text>
+    <text x="150" y="1610" font-size="11" fill="#aaffaa" text-anchor="middle">notesMap[letter]</text>
+    
+    <!-- Merge back to main path -->
+    <line x1="230" y1="1595" x2="350" y2="1595" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="350,1595 340,1590 340,1600" fill="#00ddff"/>
+    
+    <!-- YES - Use cache -->
+    <line x1="430" y1="1180" x2="500" y2="1180" stroke="#00ddff" stroke-width="3"/>
+    <text x="465" y="1170" font-size="12" fill="#00ff88" font-weight="bold">YES</text>
+    
+    <rect x="460" y="1290" width="180" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="550" y="1315" font-size="13" fill="#ffffff" text-anchor="middle">Use Cached Notes</text>
+    <text x="550" y="1330" font-size="11" fill="#aaffaa" text-anchor="middle">notesMap[letter]</text>
+    
+    <line x1="500" y1="1230" x2="500" y2="1290" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="500,1290 495,1280 505,1280" fill="#00ddff"/>
+    
+    <line x1="500" y1="1340" x2="500" y2="1595" stroke="#00ddff" stroke-width="2"/>
+    <line x1="500" y1="1595" x2="350" y2="1595" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="350,1595 360,1590 360,1600" fill="#00ddff"/>
+    
+    <!-- Position Adjustment -->
+    <rect x="250" y="1640" width="200" height="80" fill="#2a4a4a" stroke="#00ddff" stroke-width="3" rx="10"/>
+    <text x="350" y="1665" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Adjust Positions</text>
+    <text x="350" y="1685" font-size="11" fill="#cccccc" text-anchor="middle">pos = currentPos + note.pos</text>
+    <text x="350" y="1705" font-size="11" fill="#cccccc" text-anchor="middle">Track maxEndPosition</text>
+    
+    <line x1="350" y1="1595" x2="350" y2="1640" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1640 345,1630 355,1630" fill="#00ddff"/>
+    
+    <line x1="350" y1="1720" x2="350" y2="1770" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1770 345,1760 355,1760" fill="#00ddff"/>
+    
+    <!-- Advance Cursor -->
+    <rect x="250" y="1780" width="200" height="70" fill="#4a4a2a" stroke="#ffaa00" stroke-width="3" rx="10"/>
+    <text x="350" y="1805" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Advance Cursor</text>
+    <text x="350" y="1825" font-size="11" fill="#cccccc" text-anchor="middle">currentPos +=</text>
+    <text x="350" y="1840" font-size="11" fill="#cccccc" text-anchor="middle">max(letterDuration, 8*dur)</text>
+    
+    <!-- Loop back or continue -->
+    <line x1="350" y1="1850" x2="350" y2="1890" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1890 345,1880 355,1880" fill="#00ddff"/>
+    
+    <text x="350" y="1910" font-size="12" fill="#ffff00" text-anchor="middle">Loop or Continue →</text>
+    
+    <!-- ============ CHORDS PATH ============ -->
+    
+    <!-- generateChordPattern -->
+    <rect x="800" y="990" width="500" height="80" fill="#4a2a4a" stroke="#ff88dd" stroke-width="3" rx="10"/>
+    <text x="1050" y="1020" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">generateChordPattern()</text>
+    <text x="1050" y="1045" font-size="12" fill="#cccccc" text-anchor="middle">For each letter in combination (A, A, A, B)</text>
+    
+    <line x1="1050" y1="1070" x2="1050" y2="1110" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,1110 1045,1100 1055,1100" fill="#ff88dd"/>
+    
+    <!-- Cache Check -->
+    <polygon points="1050,1130 1130,1180 1050,1230 970,1180" fill="#3a3a5a" stroke="#ffaa00" stroke-width="3"/>
+    <text x="1050" y="1180" font-size="14" fill="#ffffff" text-anchor="middle">Cached?</text>
+    
+    <!-- NO path -->
+    <line x1="970" y1="1180" x2="850" y2="1180" stroke="#ff88dd" stroke-width="3"/>
+    <text x="910" y="1170" font-size="12" fill="#ff6666" font-weight="bold">NO</text>
+    
+    <rect x="750" y="1290" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="1315" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">generateRandomPattern()</text>
+    <text x="850" y="1335" font-size="11" fill="#cccccc" text-anchor="middle">Get rhythm pattern</text>
+    
+    <line x1="850" y1="1230" x2="850" y2="1290" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,1290 845,1280 855,1280" fill="#ff88dd"/>
+    
+    <line x1="850" y1="1350" x2="850" y2="1410" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,1410 845,1400 855,1400" fill="#ff88dd"/>
+    
+    <rect x="750" y="1420" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="1445" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">parseRiffPattern()</text>
+    <text x="850" y="1465" font-size="11" fill="#cccccc" text-anchor="middle">Extract timing only</text>
+    
+    <line x1="850" y1="1480" x2="850" y2="1530" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,1530 845,1520 855,1520" fill="#ff88dd"/>
+    
+    <rect x="750" y="1540" width="200" height="80" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="1565" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Build Chords</text>
+    <text x="850" y="1585" font-size="11" fill="#cccccc" text-anchor="middle">generateChordNotes()</text>
+    <text x="850" y="1602" font-size="11" fill="#cccccc" text-anchor="middle">root, third, fifth</text>
+    
+    <line x1="850" y1="1620" x2="850" y2="1670" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,1670 845,1660 855,1660" fill="#ff88dd"/>
+    
+    <rect x="770" y="1680" width="160" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="850" y="1705" font-size="13" fill="#ffffff" text-anchor="middle">Cache Chord Notes</text>
+    <text x="850" y="1720" font-size="11" fill="#aaffaa" text-anchor="middle">chordNotesMap[letter]</text>
+    
+    <line x1="930" y1="1705" x2="1050" y2="1705" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1050,1705 1040,1700 1040,1710" fill="#ff88dd"/>
+    
+    <!-- YES path -->
+    <line x1="1130" y1="1180" x2="1200" y2="1180" stroke="#ff88dd" stroke-width="3"/>
+    <text x="1165" y="1170" font-size="12" fill="#00ff88" font-weight="bold">YES</text>
+    
+    <rect x="1160" y="1290" width="180" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="1250" y="1315" font-size="13" fill="#ffffff" text-anchor="middle">Use Cached Chords</text>
+    <text x="1250" y="1330" font-size="11" fill="#aaffaa" text-anchor="middle">chordNotesMap[letter]</text>
+    
+    <line x1="1200" y1="1230" x2="1200" y2="1290" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1200,1290 1195,1280 1205,1280" fill="#ff88dd"/>
+    
+    <line x1="1200" y1="1340" x2="1200" y2="1705" stroke="#ff88dd" stroke-width="2"/>
+    <line x1="1200" y1="1705" x2="1050" y2="1705" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1050,1705 1060,1700 1060,1710" fill="#ff88dd"/>
+    
+    <!-- Position adjustment for chords -->
+    <rect x="950" y="1750" width="200" height="80" fill="#2a4a4a" stroke="#ff88dd" stroke-width="3" rx="10"/>
+    <text x="1050" y="1775" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Adjust Positions</text>
+    <text x="1050" y="1795" font-size="11" fill="#cccccc" text-anchor="middle">pos = currentPos + note.pos</text>
+    <text x="1050" y="1815" font-size="11" fill="#cccccc" text-anchor="middle">Track maxEndPosition</text>
+    
+    <line x1="1050" y1="1705" x2="1050" y2="1750" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,1750 1045,1740 1055,1740" fill="#ff88dd"/>
+    
+    <line x1="1050" y1="1830" x2="1050" y2="1880" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,1880 1045,1870 1055,1870" fill="#ff88dd"/>
+    
+    <!-- Advance Cursor -->
+    <rect x="950" y="1890" width="200" height="70" fill="#4a4a2a" stroke="#ffaa00" stroke-width="3" rx="10"/>
+    <text x="1050" y="1915" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Advance Cursor</text>
+    <text x="1050" y="1935" font-size="11" fill="#cccccc" text-anchor="middle">currentPos +=</text>
+    <text x="1050" y="1950" font-size="11" fill="#cccccc" text-anchor="middle">max(letterDuration, 8*dur)</text>
+    
+    <line x1="1050" y1="1960" x2="1050" y2="1990" stroke="#ff88dd" stroke-width="3"/>
+    
+    <text x="1050" y="1985" font-size="12" fill="#ffff00" text-anchor="middle">↓</text>
+    
+    <!-- ============ MERGE PATHS ============ -->
+    
+    <!-- Merge note - moved down -->
+    <line x1="350" y1="1940" x2="700" y2="1990" stroke="#00ddff" stroke-width="3"/>
+    <line x1="1050" y1="1990" x2="700" y2="1990" stroke="#ff88dd" stroke-width="3"/>
+    
+    <!-- Placeholder to avoid overlap -->
+    <line x1="700" y1="1990" x2="700" y2="2020" stroke="#00ff88" stroke-width="4"/>
+    <polygon points="700,2020 695,2010 705,2010" fill="#00ff88"/>
+    
+    <!-- Write to Clip - moved further down -->
+    <rect x="500" y="2030" width="400" height="100" fill="#2a4a4a" stroke="#00ff88" stroke-width="4" rx="10"/>
+    <text x="700" y="2060" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">writeNotesToClip()</text>
+    <text x="700" y="2085" font-size="12" fill="#cccccc" text-anchor="middle">Convert to sixteenths</text>
+    <text x="700" y="2105" font-size="12" fill="#cccccc" text-anchor="middle">Clamp pitch/velocity</text>
+    <text x="700" y="2120" font-size="12" fill="#cccccc" text-anchor="middle">cursorClip.setStep()</text>
+    
+    <line x1="700" y1="2130" x2="700" y2="2180" stroke="#00ff88" stroke-width="4"/>
+    <polygon points="700,2180 695,2170 705,2170" fill="#00ff88"/>
+    
+    <!-- Final Output -->
+    <rect x="550" y="2190" width="300" height="60" fill="#4a4a4a" stroke="#00ff88" stroke-width="4" rx="10"/>
+    <text x="700" y="2215" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">BITWIG CLIP</text>
+    <text x="700" y="2235" font-size="14" fill="#aaffaa" text-anchor="middle">MIDI Notes ♪</text>
+    
+    <!-- Legend -->
+    <text x="50" y="2280" font-size="14" fill="#aaaaaa" font-weight="bold">LEGEND:</text>
+    <rect x="200" y="2265" width="30" height="20" fill="#3a2a4a" stroke="#aa66ff" stroke-width="2"/>
+    <text x="240" y="2280" font-size="12" fill="#cccccc">Init/Setup</text>
+    
+    <rect x="350" y="2265" width="30" height="20" fill="#2a4a4a" stroke="#00ddff" stroke-width="2"/>
+    <text x="390" y="2280" font-size="12" fill="#cccccc">Riffs</text>
+    
+    <rect x="470" y="2265" width="30" height="20" fill="#2a4a4a" stroke="#ff88dd" stroke-width="2"/>
+    <text x="510" y="2280" font-size="12" fill="#cccccc">Chords</text>
+    
+    <rect x="590" y="2265" width="30" height="20" fill="#4a4a2a" stroke="#ff6666" stroke-width="2"/>
+    <text x="630" y="2280" font-size="12" fill="#cccccc">Generate</text>
+    
+    <rect x="720" y="2265" width="30" height="20" fill="#2a4a4a" stroke="#00ff88" stroke-width="2"/>
+    <text x="760" y="2280" font-size="12" fill="#cccccc">Cache</text>
+</svg>
+</div>
+</body>
+</html>
+    
+    <!-- Parameter Collection -->
+    <rect x="500" y="200" width="400" height="100" fill="#3a3a5a" stroke="#6666ff" stroke-width="3" rx="10"/>
+    <text x="700" y="230" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">PARAMETER COLLECTION</text>
+    <text x="700" y="255" font-size="12" fill="#cccccc" text-anchor="middle">buildScale(rootNote, scaleName)</text>
+    <text x="700" y="275" font-size="12" fill="#cccccc" text-anchor="middle">noteToMIDI() • filterScaleNotes()</text>
+    
+    <!-- Arrow down with split -->
+    <line x1="700" y1="300" x2="700" y2="340" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="700,340 695,330 705,330" fill="#00ff88"/>
+    
+    <!-- Mode Selection Diamond -->
+    <polygon points="700,360 800,410 700,460 600,410" fill="#5a3a5a" stroke="#ff6666" stroke-width="3"/>
+    <text x="700" y="415" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">MODE?</text>
+    
+    <!-- Left branch - RIFFS -->
+    <line x1="600" y1="410" x2="350" y2="410" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="350,410 360,405 360,415" fill="#00ff88"/>
+    <text x="475" y="400" font-size="14" fill="#ffff00" font-weight="bold">RIFFS</text>
+    
+    <!-- Right branch - CHORDS -->
+    <line x1="800" y1="410" x2="1050" y2="410" stroke="#00ff88" stroke-width="3"/>
+    <polygon points="1050,410 1040,405 1040,415" fill="#00ff88"/>
+    <text x="925" y="400" font-size="14" fill="#ffff00" font-weight="bold">CHORDS</text>
+    
+    <!-- ============ RIFFS PATH ============ -->
+    
+    <!-- expandCombinationWithNotes -->
+    <rect x="100" y="450" width="500" height="80" fill="#2a4a4a" stroke="#00ddff" stroke-width="3" rx="10"/>
+    <text x="350" y="480" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">expandCombinationWithNotes()</text>
+    <text x="350" y="505" font-size="12" fill="#cccccc" text-anchor="middle">For each letter in combination (A, A, A, B)</text>
+    
+    <line x1="350" y1="530" x2="350" y2="570" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,570 345,560 355,560" fill="#00ddff"/>
+    
+    <!-- Cache Check Diamond -->
+    <polygon points="350,590 430,640 350,690 270,640" fill="#3a3a5a" stroke="#ffaa00" stroke-width="3"/>
+    <text x="350" y="635" font-size="14" fill="#ffffff" text-anchor="middle">Cached?</text>
+    <text x="350" y="655" font-size="12" fill="#cccccc" text-anchor="middle">[letter]</text>
+    
+    <!-- NO - Generate new -->
+    <line x1="270" y1="640" x2="150" y2="640" stroke="#00ddff" stroke-width="3"/>
+    <text x="210" y="630" font-size="12" fill="#ff6666" font-weight="bold">NO</text>
+    
+    <rect x="50" y="750" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="150" y="775" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">generateRandomPattern()</text>
+    <text x="150" y="795" font-size="11" fill="#cccccc" text-anchor="middle">8 steps, patternStyle</text>
+    
+    <line x1="150" y1="690" x2="150" y2="750" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,750 145,740 155,740" fill="#00ddff"/>
+    
+    <line x1="150" y1="810" x2="150" y2="870" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,870 145,860 155,860" fill="#00ddff"/>
+    
+    <rect x="50" y="880" width="200" height="80" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="150" y="905" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">parseRiffPattern()</text>
+    <text x="150" y="925" font-size="11" fill="#cccccc" text-anchor="middle">x → root | R → random</text>
+    <text x="150" y="942" font-size="11" fill="#cccccc" text-anchor="middle">[...] → subdivide</text>
+    
+    <line x1="150" y1="960" x2="150" y2="1020" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="150,1020 145,1010 155,1010" fill="#00ddff"/>
+    
+    <rect x="70" y="1030" width="160" height="50" fill="#2a4a2a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="150" y="1055" font-size="13" fill="#ffffff" text-anchor="middle">Cache Notes</text>
+    <text x="150" y="1070" font-size="11" fill="#aaffaa" text-anchor="middle">notesMap[letter]</text>
+    
+    <!-- Merge back to main path -->
+    <line x1="230" y1="1055" x2="350" y2="1055" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="350,1055 340,1050 340,1060" fill="#00ddff"/>
+    
+    <!-- YES - Use cache -->
+    <line x1="430" y1="640" x2="500" y2="640" stroke="#00ddff" stroke-width="3"/>
+    <text x="465" y="630" font-size="12" fill="#00ff88" font-weight="bold">YES</text>
+    
+    <rect x="460" y="750" width="180" height="50" fill="#2a4a2a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="550" y="775" font-size="13" fill="#ffffff" text-anchor="middle">Use Cached Notes</text>
+    <text x="550" y="790" font-size="11" fill="#aaffaa" text-anchor="middle">notesMap[letter]</text>
+    
+    <line x1="500" y1="690" x2="500" y2="750" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="500,750 495,740 505,740" fill="#00ddff"/>
+    
+    <line x1="500" y1="800" x2="500" y2="1055" stroke="#00ddff" stroke-width="2"/>
+    <line x1="500" y1="1055" x2="350" y2="1055" stroke="#00ddff" stroke-width="2"/>
+    <polygon points="350,1055 360,1050 360,1060" fill="#00ddff"/>
+    
+    <!-- Position Adjustment -->
+    <rect x="250" y="1100" width="200" height="80" fill="#2a4a4a" stroke="#00ddff" stroke-width="3" rx="10"/>
+    <text x="350" y="1125" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Adjust Positions</text>
+    <text x="350" y="1145" font-size="11" fill="#cccccc" text-anchor="middle">pos = currentPos + note.pos</text>
+    <text x="350" y="1165" font-size="11" fill="#cccccc" text-anchor="middle">Track maxEndPosition</text>
+    
+    <line x1="350" y1="1055" x2="350" y2="1100" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1100 345,1090 355,1090" fill="#00ddff"/>
+    
+    <line x1="350" y1="1180" x2="350" y2="1230" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1230 345,1220 355,1220" fill="#00ddff"/>
+    
+    <!-- Advance Cursor -->
+    <rect x="250" y="1240" width="200" height="70" fill="#4a4a2a" stroke="#ffaa00" stroke-width="3" rx="10"/>
+    <text x="350" y="1265" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Advance Cursor</text>
+    <text x="350" y="1285" font-size="11" fill="#cccccc" text-anchor="middle">currentPos +=</text>
+    <text x="350" y="1300" font-size="11" fill="#cccccc" text-anchor="middle">max(letterDuration, 8*dur)</text>
+    
+    <!-- Loop back or continue -->
+    <line x1="350" y1="1310" x2="350" y2="1350" stroke="#00ddff" stroke-width="3"/>
+    <polygon points="350,1350 345,1340 355,1340" fill="#00ddff"/>
+    
+    <text x="350" y="1370" font-size="12" fill="#ffff00" text-anchor="middle">Loop or Continue →</text>
+    
+    <!-- ============ CHORDS PATH ============ -->
+    
+    <!-- generateChordPattern -->
+    <rect x="800" y="450" width="500" height="80" fill="#4a2a4a" stroke="#ff88dd" stroke-width="3" rx="10"/>
+    <text x="1050" y="480" font-size="16" fill="#ffffff" text-anchor="middle" font-weight="bold">generateChordPattern()</text>
+    <text x="1050" y="505" font-size="12" fill="#cccccc" text-anchor="middle">For each letter in combination (A, A, A, B)</text>
+    
+    <line x1="1050" y1="530" x2="1050" y2="570" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,570 1045,560 1055,560" fill="#ff88dd"/>
+    
+    <!-- Cache Check -->
+    <polygon points="1050,590 1130,640 1050,690 970,640" fill="#3a3a5a" stroke="#ffaa00" stroke-width="3"/>
+    <text x="1050" y="640" font-size="14" fill="#ffffff" text-anchor="middle">Cached?</text>
+    
+    <!-- NO path -->
+    <line x1="970" y1="640" x2="850" y2="640" stroke="#ff88dd" stroke-width="3"/>
+    <text x="910" y="630" font-size="12" fill="#ff6666" font-weight="bold">NO</text>
+    
+    <rect x="750" y="750" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="775" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">generateRandomPattern()</text>
+    <text x="850" y="795" font-size="11" fill="#cccccc" text-anchor="middle">Get rhythm pattern</text>
+    
+    <line x1="850" y1="690" x2="850" y2="750" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,750 845,740 855,740" fill="#ff88dd"/>
+    
+    <line x1="850" y1="810" x2="850" y2="870" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,870 845,860 855,860" fill="#ff88dd"/>
+    
+    <rect x="750" y="880" width="200" height="60" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="905" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">parseRiffPattern()</text>
+    <text x="850" y="925" font-size="11" fill="#cccccc" text-anchor="middle">Extract timing only</text>
+    
+    <line x1="850" y1="940" x2="850" y2="990" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,990 845,980 855,980" fill="#ff88dd"/>
+    
+    <rect x="750" y="1000" width="200" height="80" fill="#4a2a2a" stroke="#ff6666" stroke-width="2" rx="8"/>
+    <text x="850" y="1025" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Build Chords</text>
+    <text x="850" y="1045" font-size="11" fill="#cccccc" text-anchor="middle">generateChordNotes()</text>
+    <text x="850" y="1062" font-size="11" fill="#cccccc" text-anchor="middle">root, third, fifth</text>
+    
+    <line x1="850" y1="1080" x2="850" y2="1130" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="850,1130 845,1120 855,1120" fill="#ff88dd"/>
+    
+    <rect x="770" y="1140" width="160" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="850" y="1165" font-size="13" fill="#ffffff" text-anchor="middle">Cache Chord Notes</text>
+    <text x="850" y="1180" font-size="11" fill="#aaffaa" text-anchor="middle">chordNotesMap[letter]</text>
+    
+    <line x1="930" y1="1165" x2="1050" y2="1165" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1050,1165 1040,1160 1040,1170" fill="#ff88dd"/>
+    
+    <!-- YES path -->
+    <line x1="1130" y1="640" x2="1200" y2="640" stroke="#ff88dd" stroke-width="3"/>
+    <text x="1165" y="630" font-size="12" fill="#00ff88" font-weight="bold">YES</text>
+    
+    <rect x="1160" y="750" width="180" height="50" fill="#2a4a4a" stroke="#00ff88" stroke-width="2" rx="8"/>
+    <text x="1250" y="775" font-size="13" fill="#ffffff" text-anchor="middle">Use Cached Chords</text>
+    <text x="1250" y="790" font-size="11" fill="#aaffaa" text-anchor="middle">chordNotesMap[letter]</text>
+    
+    <line x1="1200" y1="690" x2="1200" y2="750" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1200,750 1195,740 1205,740" fill="#ff88dd"/>
+    
+    <line x1="1200" y1="800" x2="1200" y2="1165" stroke="#ff88dd" stroke-width="2"/>
+    <line x1="1200" y1="1165" x2="1050" y2="1165" stroke="#ff88dd" stroke-width="2"/>
+    <polygon points="1050,1165 1060,1160 1060,1170" fill="#ff88dd"/>
+    
+    <!-- Position adjustment for chords -->
+    <rect x="950" y="1210" width="200" height="80" fill="#2a4a4a" stroke="#ff88dd" stroke-width="3" rx="10"/>
+    <text x="1050" y="1235" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Adjust Positions</text>
+    <text x="1050" y="1255" font-size="11" fill="#cccccc" text-anchor="middle">pos = currentPos + note.pos</text>
+    <text x="1050" y="1275" font-size="11" fill="#cccccc" text-anchor="middle">Track maxEndPosition</text>
+    
+    <line x1="1050" y1="1165" x2="1050" y2="1210" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,1210 1045,1200 1055,1200" fill="#ff88dd"/>
+    
+    <line x1="1050" y1="1290" x2="1050" y2="1340" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="1050,1340 1045,1330 1055,1330" fill="#ff88dd"/>
+    
+    <!-- Advance Cursor -->
+    <rect x="950" y="1350" width="200" height="70" fill="#4a4a2a" stroke="#ffaa00" stroke-width="3" rx="10"/>
+    <text x="1050" y="1375" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">Advance Cursor</text>
+    <text x="1050" y="1395" font-size="11" fill="#cccccc" text-anchor="middle">currentPos +=</text>
+    <text x="1050" y="1410" font-size="11" fill="#cccccc" text-anchor="middle">max(letterDuration, 8*dur)</text>
+    
+    <line x1="1050" y1="1420" x2="1050" y2="1450" stroke="#ff88dd" stroke-width="3"/>
+    
+    <text x="1050" y="1470" font-size="12" fill="#ffff00" text-anchor="middle">Loop or Continue →</text>
+    
+    <!-- ============ MERGE PATHS ============ -->
+    
+    <!-- Merge arrows -->
+    <line x1="350" y1="1400" x2="700" y2="1530" stroke="#00ddff" stroke-width="3"/>
+    <line x1="1050" y1="1500" x2="700" y2="1530" stroke="#ff88dd" stroke-width="3"/>
+    <polygon points="700,1530 695,1520 705,1520" fill="#00ff88"/>
+    
+    <!-- Write to Clip -->
+    <rect x="500" y="1540" width="400" height="100" fill="#2a4a2a" stroke="#00ff88" stroke-width="4" rx="10"/>
+    <text x="700" y="1570" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">writeNotesToClip()</text>
+    <text x="700" y="1595" font-size="12" fill="#cccccc" text-anchor="middle">Convert to sixteenths</text>
+    <text x="700" y="1615" font-size="12" fill="#cccccc" text-anchor="middle">Clamp pitch/velocity</text>
+    <text x="700" y="1630" font-size="12" fill="#cccccc" text-anchor="middle">cursorClip.setStep()</text>
+    
+    <line x1="700" y1="1640" x2="700" y2="1690" stroke="#00ff88" stroke-width="4"/>
+    <polygon points="700,1690 695,1680 705,1680" fill="#00ff88"/>
+    
+    <!-- Final Output -->
+    <rect x="550" y="1700" width="300" height="60" fill="#4a4a4a" stroke="#00ff88" stroke-width="4" rx="10"/>
+    <text x="700" y="1725" font-size="18" fill="#ffffff" text-anchor="middle" font-weight="bold">BITWIG CLIP</text>
+    <text x="700" y="1745" font-size="14" fill="#aaffaa" text-anchor="middle">MIDI Notes ♪</text>
+    
+    <!-- Legend -->
+    <text x="50" y="1780" font-size="14" fill="#aaaaaa" font-weight="bold">LEGEND:</text>
+    <rect x="50" y="1790" width="30" height="20" fill="#2a4a4a" stroke="#00ddff" stroke-width="2"/>
+    <text x="90" y="1805" font-size="12" fill="#cccccc">Riffs Path</text>
+    
+    <rect x="200" y="1790" width="30" height="20" fill="#2a4a4a" stroke="#ff88dd" stroke-width="2"/>
+    <text x="240" y="1805" font-size="12" fill="#cccccc">Chords Path</text>
+    
+    <rect x="350" y="1790" width="30" height="20" fill="#4a4a2a" stroke="#ff6666" stroke-width="2"/>
+    <text x="390" y="1805" font-size="12" fill="#cccccc">Generate New</text>
+    
+    <rect x="500" y="1790" width="30" height="20" fill="#2a4a4a" stroke="#00ff88" stroke-width="2"/>
+    <text x="540" y="1805" font-size="12" fill="#cccccc">Use Cache</text>
+</svg>
+</body>
+</html>
