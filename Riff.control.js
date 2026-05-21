@@ -233,32 +233,44 @@ function generateRandomPattern(length, patternStyle) {
   return pattern
 }
 
-function expandCombination(combination, patternStyle, reusePattern) {
+function expandCombination(combination, patternStyle, reusePattern, scaleNotes) {
   let patternMap = reusePattern ? lastGeneratedPatternMap : {}
   let fullPattern = ''
-  
+  let noteChoices = []
+
   for (let i = 0; i < combination.length; i++) {
     const letter = combination[i]
-    
+
     if (!patternMap[letter]) {
-      patternMap[letter] = generateRandomPattern(8, patternStyle)
+      const pat = generateRandomPattern(8, patternStyle)
+      const rNotes = []
+      for (let j = 0; j < pat.length; j++) {
+        if (pat[j] === 'R') {
+          rNotes.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
+        }
+      }
+      patternMap[letter] = { pattern: pat, rNotes: rNotes }
     }
-    
-    fullPattern += patternMap[letter]
+
+    fullPattern += patternMap[letter].pattern
+    const letterNotes = patternMap[letter].rNotes
+    for (let k = 0; k < letterNotes.length; k++) {
+      noteChoices.push(letterNotes[k])
+    }
   }
-  
+
   if (!reusePattern) {
     lastGeneratedPatternMap = patternMap
   }
-  
-  return fullPattern
+
+  return { pattern: fullPattern, noteCursor: { index: 0, notes: noteChoices } }
 }
 
 // ============================================================================
 // PATTERN PARSER
 // ============================================================================
 
-function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration) {
+function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration, noteCursor) {
   const notes = []
   let currentPosition = startPosition
   let i = 0
@@ -277,7 +289,7 @@ function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration
       
       const subPattern = pattern.substring(i + 1, j - 1)
       const subDuration = duration / 2
-      const subResult = parseRiffPattern(subPattern, rootNote, scaleNotes, currentPosition, subDuration)
+      const subResult = parseRiffPattern(subPattern, rootNote, scaleNotes, currentPosition, subDuration, noteCursor)
 
       for (let k = 0; k < subResult.notes.length; k++) {
         notes.push(subResult.notes[k])
@@ -298,7 +310,9 @@ function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration
       i++
       
     } else if (char === 'R') {
-      const randomNote = scaleNotes[Math.floor(Math.random() * scaleNotes.length)]
+      const randomNote = (noteCursor && noteCursor.index < noteCursor.notes.length)
+        ? noteCursor.notes[noteCursor.index++]
+        : scaleNotes[Math.floor(Math.random() * scaleNotes.length)]
       notes.push({
         channel: 0,
         position: currentPosition,
@@ -392,9 +406,9 @@ function generateChordPattern(combination, rootNote, scaleNotes, progressionName
   }
   
   // Generate base pattern
-  const pattern = expandCombination(combination, patternStyle, reusePattern)
+  const { pattern } = expandCombination(combination, patternStyle, reusePattern, validScaleNotes)
   const duration = NOTE_DURATIONS[noteLength]
-  
+
   // Use the same parser as riffs but replace single notes with chords
   const riffNotes = parseRiffPattern(pattern, rootNote, validScaleNotes, 0, duration).notes
   
@@ -464,9 +478,9 @@ function init() {
     if (mode === 'Riffs') {
       // Riffs mode - monophonic patterns
       const scaleNotes = filterScaleNotes(fullScale, scaleFilterParam.get())
-      const pattern = expandCombination(combination, patternStyle, reusePattern)
+      const expanded = expandCombination(combination, patternStyle, reusePattern, scaleNotes)
       const duration = NOTE_DURATIONS[noteLength]
-      notes = parseRiffPattern(pattern, rootNote, scaleNotes, 0, duration).notes
+      notes = parseRiffPattern(expanded.pattern, rootNote, scaleNotes, 0, duration, expanded.noteCursor).notes
     } else {
       // Chords mode - polyphonic chord progressions
       const chordProgression = chordProgressionParam.get()
