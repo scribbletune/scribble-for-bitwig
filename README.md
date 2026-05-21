@@ -2,7 +2,7 @@
 
 A powerful MIDI pattern generator for Bitwig Studio using Scribbletune's unique bracket notation system.
 
-![Riff for Bitwig Demo](screenshots/demo.gif)
+![Riff for Bitwig Demo](https://scribbletune.com/images/riff4bitwig.png)
 
 ## What is Riff?
 
@@ -51,7 +51,7 @@ Perfect for quickly sketching basslines, leads, melodies, percussion and chord p
 
 ### macOS
 
-1. Download `Riff.control.js` from the [latest release](../../releases)
+1. Download `Riff.control.js`
 2. Copy the file to: `~/Documents/Bitwig Studio/Controller Scripts/`
 3. Restart Bitwig Studio
 4. Go to **Settings → Controllers**
@@ -59,19 +59,19 @@ Perfect for quickly sketching basslines, leads, melodies, percussion and chord p
 
 ### Windows
 
-1. Download `Riff.control.js` from the [latest release](../../releases)
+1. Download `Riff.control.js`
 2. Copy the file to: `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\`
 3. Restart Bitwig Studio
 4. Go to **Settings → Controllers**
-5. Click **Add controller** and select **Scribbletune → Riff**
+5. Click **Add controller** and select **Riff**
 
 ### Linux
 
-1. Download `Riff.control.js` from the [latest release](../../releases)
+1. Download `Riff.control.js`
 2. Copy the file to: `~/Bitwig Studio/Controller Scripts/`
 3. Restart Bitwig Studio
 4. Go to **Settings → Controllers**
-5. Click **Add controller** and select **Scribbletune → Riff**
+5. Click **Add controller** and select **Riff**
 
 ## Quick Start
 
@@ -82,14 +82,6 @@ Perfect for quickly sketching basslines, leads, melodies, percussion and chord p
    - Pick a **Pattern Style** (try "pulse" or "melody" to start)
 3. Click **Generate!**
 4. Listen and iterate - each click generates a fresh pattern
-
-### Tips
-
-- **Riffs mode** is great for basslines and lead melodies - try "syncopated" or "house groove" styles
-- **Chords mode** is perfect for progressions - the I-V-vi-IV progression is a popular starting point
-- Use **Pattern Combinations** like AAAB for verse/chorus structures
-- Try **Scale Filter** (Riffs only) to limit melodic range - "odd" and "even" create interesting intervallic patterns
-- Longer **Note Lengths** (2n, 1n, 2m) work well for pads and atmospheric parts
 
 ## The Bracket Notation System
 
@@ -142,14 +134,12 @@ Created by [Walmik Deshpande](https://github.com/walmik)
 
 Part of the [Scribbletune](https://scribbletune.com) project - a suite of tools for algorithmic music composition.
 
-Original Riff VST3 plugin ported to Bitwig with assistance from Claude (Anthropic).
-
 ## Links
 
 - **Scribbletune**: https://scribbletune.com
-- **Demo Video**: [YouTube link]
+- **Demo Video**: https://www.youtube.com/watch?v=Pxa6T1t0Ips
 - **Issues & Support**: [GitHub Issues](../../issues)
-- **Other Scribbletune Projects**: https://github.com/scribbletune
+- **Other Scribbletune Projects**: https://github.com/scribbletune/plugins
 
 ---
 
