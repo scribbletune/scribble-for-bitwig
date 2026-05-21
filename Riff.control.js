@@ -335,14 +335,14 @@ function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration
   return { notes, consumed: currentPosition - startPosition }
 }
 
-function writeNotesToClip(notes, clip) {
-  const occupiedSteps = new Set()
+function writeNotesToClip(notes, clip, deduplicateSteps) {
+  const occupiedSteps = deduplicateSteps ? new Set() : null
   for (let i = 0; i < notes.length; i++) {
     const note = notes[i]
     const positionInSixteenths = Math.round(note.position * 4)
     if (positionInSixteenths < 0 || positionInSixteenths > 127) continue
-    if (occupiedSteps.has(positionInSixteenths)) continue
-    occupiedSteps.add(positionInSixteenths)
+    if (occupiedSteps && occupiedSteps.has(positionInSixteenths)) continue
+    if (occupiedSteps) occupiedSteps.add(positionInSixteenths)
     const pitch = Math.min(127, Math.max(0, Math.floor(note.pitch)))
     const velocity = Math.min(127, Math.max(1, Math.round(note.velocity)))
     clip.setStep(note.channel, positionInSixteenths, pitch, velocity, Math.max(0.0625, note.length))
@@ -506,7 +506,7 @@ function init() {
     const clipLengthInBeats = Math.min(32, (maxPosition * 4) + (maxLength * 4))
     cursorClip.getLoopLength().setRaw(Math.max(4, clipLengthInBeats))
     cursorClip.clearSteps()
-    writeNotesToClip(notes, cursorClip)
+    writeNotesToClip(notes, cursorClip, mode === 'Riffs')
   })
   
   documentState.getSignalSetting('Clear Clip', 'Actions', 'Clear').addSignalObserver(function() {
