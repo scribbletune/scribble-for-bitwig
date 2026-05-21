@@ -277,14 +277,13 @@ function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration
       
       const subPattern = pattern.substring(i + 1, j - 1)
       const subDuration = duration / 2
-      const subNotes = parseRiffPattern(subPattern, rootNote, scaleNotes, currentPosition, subDuration)
-      
-      for (let k = 0; k < subNotes.length; k++) {
-        notes.push(subNotes[k])
+      const subResult = parseRiffPattern(subPattern, rootNote, scaleNotes, currentPosition, subDuration)
+
+      for (let k = 0; k < subResult.notes.length; k++) {
+        notes.push(subResult.notes[k])
       }
-      
-      const subLength = subPattern.replace(/[\[\]]/g, '').length
-      currentPosition += subDuration * subLength
+
+      currentPosition += subResult.consumed
       i = j
       
     } else if (char === 'x') {
@@ -319,33 +318,39 @@ function parseRiffPattern(pattern, rootNote, scaleNotes, startPosition, duration
     }
   }
   
-  return notes
+  return { notes, consumed: currentPosition - startPosition }
 }
 
 function writeNotesToClip(notes, clip) {
+  const occupiedSteps = new Set()
   for (let i = 0; i < notes.length; i++) {
     const note = notes[i]
-    
-    // Calculate position first
     const positionInSixteenths = Math.round(note.position * 4)
-    
-    // Skip notes beyond Bitwig's position limit (0-127 sixteenths)
-    if (positionInSixteenths < 0 || positionInSixteenths > 127) {
-      continue
-    }
-    
-    // Clamp pitch to valid MIDI range
+    if (positionInSixteenths < 0 || positionInSixteenths > 127) continue
+    if (occupiedSteps.has(positionInSixteenths)) continue
+    occupiedSteps.add(positionInSixteenths)
     const pitch = Math.min(127, Math.max(0, Math.floor(note.pitch)))
     const velocity = Math.min(127, Math.max(1, Math.round(note.velocity)))
-    const length = Math.max(0.0625, note.length)
-    
-    // Final safety check
-    if (pitch < 0 || pitch > 127) {
-      continue
-    }
-    
-    clip.setStep(note.channel, positionInSixteenths, pitch, velocity, length)
+    clip.setStep(note.channel, positionInSixteenths, pitch, velocity, Math.max(0.0625, note.length))
   }
+}
+
+function mergeAdjacentNotes(notes) {
+  if (notes.length === 0) return notes
+  const sorted = notes.slice().sort(function(a, b) { return a.position - b.position })
+  const result = []
+  for (let i = 0; i < sorted.length; i++) {
+    const note = sorted[i]
+    if (result.length > 0) {
+      const last = result[result.length - 1]
+      if (last.pitch === note.pitch && Math.abs((last.position + last.length) - note.position) < 1e-9) {
+        last.length += note.length
+        continue
+      }
+    }
+    result.push({ channel: note.channel, position: note.position, pitch: note.pitch, velocity: note.velocity, length: note.length })
+  }
+  return result
 }
 
 // ============================================================================
@@ -391,7 +396,7 @@ function generateChordPattern(combination, rootNote, scaleNotes, progressionName
   const duration = NOTE_DURATIONS[noteLength]
   
   // Use the same parser as riffs but replace single notes with chords
-  const riffNotes = parseRiffPattern(pattern, rootNote, validScaleNotes, 0, duration)
+  const riffNotes = parseRiffPattern(pattern, rootNote, validScaleNotes, 0, duration).notes
   
   // Determine chord changes based on note positions
   const notes = []
@@ -443,6 +448,7 @@ function init() {
   const patternStyleParam = documentState.getEnumSetting('Pattern Style', 'Pattern Settings', Object.keys(PATTERN_PALETTES), 'pulse')
   const noteLengthParam = documentState.getEnumSetting('Note Length', 'Pattern Settings', Object.keys(NOTE_DURATIONS), '16n')
   const reusePatternParam = documentState.getEnumSetting('Pattern Reuse', 'Pattern Settings', ['New every time', 'Re-use previous'], 'New every time')
+  const legatoParam = documentState.getEnumSetting('Legato', 'Pattern Settings', ['Off', 'On'], 'Off')
   
   documentState.getSignalSetting('Generate Pattern', 'Actions', 'Generate!').addSignalObserver(function() {
     const rootNote = noteToMIDI(rootNoteParam.get(), octaveParam.getRaw())
@@ -460,13 +466,17 @@ function init() {
       const scaleNotes = filterScaleNotes(fullScale, scaleFilterParam.get())
       const pattern = expandCombination(combination, patternStyle, reusePattern)
       const duration = NOTE_DURATIONS[noteLength]
-      notes = parseRiffPattern(pattern, rootNote, scaleNotes, 0, duration)
+      notes = parseRiffPattern(pattern, rootNote, scaleNotes, 0, duration).notes
     } else {
       // Chords mode - polyphonic chord progressions
       const chordProgression = chordProgressionParam.get()
       notes = generateChordPattern(combination, rootNote, fullScale, chordProgression, noteLength, reusePattern, patternStyle)
     }
-    
+
+    if (legatoParam.get() === 'On') {
+      notes = mergeAdjacentNotes(notes)
+    }
+
     // Calculate clip length based on actual notes generated
     let maxPosition = 0
     let maxLength = 0
