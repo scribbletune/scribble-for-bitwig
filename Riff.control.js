@@ -355,14 +355,18 @@ function mergeAdjacentNotes(notes) {
   const result = []
   for (let i = 0; i < sorted.length; i++) {
     const note = sorted[i]
-    if (result.length > 0) {
-      const last = result[result.length - 1]
-      if (last.pitch === note.pitch && Math.abs((last.position + last.length) - note.position) < 1e-9) {
-        last.length += note.length
-        continue
+    let merged = false
+    for (let j = result.length - 1; j >= 0; j--) {
+      const existing = result[j]
+      if (existing.pitch === note.pitch && Math.abs((existing.position + existing.length) - note.position) < 1e-9) {
+        existing.length += note.length
+        merged = true
+        break
       }
     }
-    result.push({ channel: note.channel, position: note.position, pitch: note.pitch, velocity: note.velocity, length: note.length })
+    if (!merged) {
+      result.push({ channel: note.channel, position: note.position, pitch: note.pitch, velocity: note.velocity, length: note.length })
+    }
   }
   return result
 }
