@@ -1,13 +1,13 @@
 /**
  * Riff for Bitwig - Complete Production Version
  * Port of the Riff VST3 MIDI pattern generator
- * @version 1.0.0
+ * @version 0.9.1
  * @author Walmik Deshpande
  */
 
 loadAPI(17)
 host.setShouldFailOnDeprecatedUse(true)
-host.defineController('Scribbletune', 'Riff', '1.0.0', '367f5ed2-bcaa-473d-801a-35615d0ac604', 'Riff')
+host.defineController('Scribbletune', 'Riff', '0.9.1', '367f5ed2-bcaa-473d-801a-35615d0ac604', 'Riff')
 
 // ============================================================================
 // CONSTANTS
@@ -41,8 +41,8 @@ const NOTE_DURATIONS = {
 }
 
 const PATTERN_PALETTES = {
-  'pulse': ['x', '-', '[x-]'],
-  'sparse pulse': ['-', '-', '[x-]', '-', '[x-]'],
+  'pulse': ['x', '-', '[x-]', 'R', '[R-]'],
+  'sparse pulse': ['-', '-', '-', '[x-]', 'R', '[R-]'],
   'melody': ['R', '-', '[R-]'],
   'sparse melody': ['-', '-', '[R-]', '-', '[R-]'],
   'counterpoint': ['x', '-', '[x-]', 'R', '[R-]'],
@@ -181,14 +181,6 @@ function generateRandomPattern(length, patternStyle) {
       } else {
         currentPalette = ['-', '[-x]', '[--x]']
       }
-    } else if (patternStyle === 'pulse') {
-      if (i % 4 === 0) {
-        currentPalette = ['x', '[x-]']
-      } else if (i % 4 === 2) {
-        currentPalette = ['x', '-', '[x-]']
-      } else {
-        currentPalette = ['-', '[-x]', '[x-]']
-      }
     } else if (patternStyle === 'counterpoint') {
       if (i % 4 === 0 || i % 4 === 2) {
         currentPalette = ['x', '[x-]', '-']
@@ -203,14 +195,6 @@ function generateRandomPattern(length, patternStyle) {
         currentPalette = ['R', '[R-]', '[RR]']
       } else {
         currentPalette = ['-', '[R-]']
-      }
-    } else if (patternStyle === 'sparse pulse') {
-      if (i % 8 === 0 || i % 8 === 7) {
-        currentPalette = ['x', '[x-]']
-      } else if (i % 8 === 3) {
-        currentPalette = ['-', '-', '[x-]']
-      } else {
-        currentPalette = ['-', '-', '-', '-']
       }
     } else if (patternStyle === 'sparse melody') {
       const cyclePos = i % 6
@@ -227,7 +211,12 @@ function generateRandomPattern(length, patternStyle) {
       }
     }
     
-    pattern += randomChoice(currentPalette)
+    let token = randomChoice(currentPalette)
+    if (patternStyle === 'pulse' || patternStyle === 'sparse pulse') {
+      if (token === 'R') token = Math.random() < 0.5 ? 'x' : '-'
+      else if (token === '[R-]') token = Math.random() < 0.5 ? '[x-]' : '-'
+    }
+    pattern += token
   }
   
   return pattern
