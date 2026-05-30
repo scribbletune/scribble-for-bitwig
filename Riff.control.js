@@ -1,13 +1,13 @@
 /**
  * Riff for Bitwig - Complete Production Version
  * Port of the Riff VST3 MIDI pattern generator
- * @version 0.9.1
+ * @version 0.9.2
  * @author Walmik Deshpande
  */
 
 loadAPI(17)
 host.setShouldFailOnDeprecatedUse(true)
-host.defineController('Scribbletune', 'Riff', '0.9.1', '367f5ed2-bcaa-473d-801a-35615d0ac604', 'Riff')
+host.defineController('Scribbletune', 'Riff', '0.9.2', '367f5ed2-bcaa-473d-801a-35615d0ac604', 'Riff')
 
 // ============================================================================
 // CONSTANTS
