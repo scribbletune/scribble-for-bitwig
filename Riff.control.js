@@ -231,20 +231,15 @@ function expandCombination(combination, patternStyle, reusePattern, scaleNotes) 
     const letter = combination[i]
 
     if (!patternMap[letter]) {
-      const pat = generateRandomPattern(8, patternStyle)
-      const rNotes = []
-      for (let j = 0; j < pat.length; j++) {
-        if (pat[j] === 'R') {
-          rNotes.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
-        }
-      }
-      patternMap[letter] = { pattern: pat, rNotes: rNotes }
+      patternMap[letter] = { pattern: generateRandomPattern(8, patternStyle) }
     }
 
-    fullPattern += patternMap[letter].pattern
-    const letterNotes = patternMap[letter].rNotes
-    for (let k = 0; k < letterNotes.length; k++) {
-      noteChoices.push(letterNotes[k])
+    const pat = patternMap[letter].pattern
+    fullPattern += pat
+    for (let j = 0; j < pat.length; j++) {
+      if (pat[j] === 'R') {
+        noteChoices.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
+      }
     }
   }
 
