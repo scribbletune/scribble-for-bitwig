@@ -222,7 +222,7 @@ function generateRandomPattern(length, patternStyle) {
   return pattern
 }
 
-function expandCombination(combination, patternStyle, reusePattern, scaleNotes) {
+function expandCombination(combination, patternStyle, reusePattern, noteVariation, scaleNotes) {
   let patternMap = reusePattern ? lastGeneratedPatternMap : {}
   let fullPattern = ''
   let noteChoices = []
@@ -236,9 +236,21 @@ function expandCombination(combination, patternStyle, reusePattern, scaleNotes) 
 
     const pat = patternMap[letter].pattern
     fullPattern += pat
-    for (let j = 0; j < pat.length; j++) {
-      if (pat[j] === 'R') {
-        noteChoices.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
+
+    if (noteVariation === 'Fixed') {
+      if (!patternMap[letter].rNotes) {
+        const rNotes = []
+        for (let j = 0; j < pat.length; j++) {
+          if (pat[j] === 'R') rNotes.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
+        }
+        patternMap[letter].rNotes = rNotes
+      }
+      for (let k = 0; k < patternMap[letter].rNotes.length; k++) {
+        noteChoices.push(patternMap[letter].rNotes[k])
+      }
+    } else {
+      for (let j = 0; j < pat.length; j++) {
+        if (pat[j] === 'R') noteChoices.push(scaleNotes[Math.floor(Math.random() * scaleNotes.length)])
       }
     }
   }
@@ -373,7 +385,7 @@ function generateChordNotes(rootNote, scaleNotes, degree) {
   return [chordRoot, third, fifth]
 }
 
-function generateChordPattern(combination, rootNote, scaleNotes, progressionName, noteLength, reusePattern, patternStyle) {
+function generateChordPattern(combination, rootNote, scaleNotes, progressionName, noteLength, reusePattern, noteVariation, patternStyle) {
   const progression = CHORD_PROGRESSIONS[progressionName]
   if (!progression) {
     host.println('Unknown progression: ' + progressionName)
@@ -394,7 +406,7 @@ function generateChordPattern(combination, rootNote, scaleNotes, progressionName
   }
   
   // Generate base pattern
-  const { pattern } = expandCombination(combination, patternStyle, reusePattern, validScaleNotes)
+  const { pattern } = expandCombination(combination, patternStyle, reusePattern, noteVariation, validScaleNotes)
   const duration = NOTE_DURATIONS[noteLength]
 
   // Use the same parser as riffs but replace single notes with chords
@@ -450,6 +462,7 @@ function init() {
   const patternStyleParam = documentState.getEnumSetting('Pattern Style', 'Pattern Settings', Object.keys(PATTERN_PALETTES), 'pulse')
   const noteLengthParam = documentState.getEnumSetting('Note Length', 'Pattern Settings', Object.keys(NOTE_DURATIONS), '16n')
   const reusePatternParam = documentState.getEnumSetting('Pattern Reuse', 'Pattern Settings', ['New every time', 'Re-use previous'], 'New every time')
+  const noteVariationParam = documentState.getEnumSetting('Note Variation', 'Pattern Settings', ['Fixed', 'Free'], 'Fixed')
   const legatoParam = documentState.getEnumSetting('Legato', 'Pattern Settings', ['Off', 'On'], 'Off')
   
   documentState.getSignalSetting('Generate Pattern', 'Actions', 'Generate!').addSignalObserver(function() {
@@ -460,19 +473,20 @@ function init() {
     const patternStyle = patternStyleParam.get()
     const noteLength = noteLengthParam.get()
     const reusePattern = reusePatternParam.get() === 'Re-use previous'
+    const noteVariation = noteVariationParam.get()
     
     let notes = []
     
     if (mode === 'Riffs') {
       // Riffs mode - monophonic patterns
       const scaleNotes = filterScaleNotes(fullScale, scaleFilterParam.get())
-      const expanded = expandCombination(combination, patternStyle, reusePattern, scaleNotes)
+      const expanded = expandCombination(combination, patternStyle, reusePattern, noteVariation, scaleNotes)
       const duration = NOTE_DURATIONS[noteLength]
       notes = parseRiffPattern(expanded.pattern, rootNote, scaleNotes, 0, duration, expanded.noteCursor).notes
     } else {
       // Chords mode - polyphonic chord progressions
       const chordProgression = chordProgressionParam.get()
-      notes = generateChordPattern(combination, rootNote, fullScale, chordProgression, noteLength, reusePattern, patternStyle)
+      notes = generateChordPattern(combination, rootNote, fullScale, chordProgression, noteLength, reusePattern, noteVariation, patternStyle)
     }
 
     if (legatoParam.get() === 'On') {
