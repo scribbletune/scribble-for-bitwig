@@ -1,128 +1,85 @@
-# Riff for Bitwig
+# Scribbletune for Bitwig
 
-A powerful MIDI pattern generator for Bitwig Studio using Scribbletune's unique bracket notation system.
+Free, open-source Bitwig controller scripts for algorithmic MIDI generation — melodies, chords, and drum patterns written directly into your arranger clips.
 
 ![Riff for Bitwig Demo](https://scribbletune.com/images/riff4bitwig.png)
 
-## What is Riff?
+## Scripts
 
-Riff is a free, open-source Bitwig controller script that generates musical MIDI patterns with recursive subdivisions. Originally created as a VST3 plugin, Riff is now available natively in Bitwig Studio.
+### Riff (`Riff.control.js`)
 
-Perfect for quickly sketching basslines, leads, melodies, percussion and chord progressions without falling into repetitive patterns. The randomization keeps things fresh while staying musical.
+Generates melodic and chord patterns using Scribbletune's bracket notation system. A port of the [free Riff VST3/AU plugin](https://scribbletune.com/plugins/#riff-vst).
 
-**[Watch the Demo Video](your-youtube-link-here)**
+- **Two modes**: Riffs (monophonic) and Chords (polyphonic progressions)
+- **16 pattern styles**: Pulse, Sparse Pulse, Melody, Counterpoint, Syncopated, House Groove, Off Beat, Roll, Fill, Breakbeat, Buildup, Conversation, Stutter, Hypnotic, Simple, and more
+- **12 scales**, 7 chord progressions, scale filtering, pattern combinations, legato mode
 
-## Features
+### Drummer (`Drummer.control.js`)
 
-### Two Generation Modes
+Generates drum patterns from the "260 Drum Machine Patterns" book. Port of the Drummer device from scribble-for-max.
 
-- **Riffs**: Monophonic patterns for basslines and melodies
-- **Chords**: Polyphonic chord progressions
-
-### 16 Pattern Styles
-
-- Pulse
-- Sparse Pulse
-- Melody
-- Sparse Melody
-- Counterpoint
-- Syncopated
-- House Groove
-- Off Beat
-- Roll
-- Fill
-- Breakbeat
-- Buildup
-- Conversation
-- Stutter
-- Hypnotic
-- Simple
-
-### Musical Controls
-
-- **12 Scales**: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian, Harmonic Minor, Pentatonic Major, Pentatonic Minor, Blues, Chromatic
-- **Scale Filtering** (Riffs mode): All, Odd, Even, First Half, Second Half, Thirds
-- **7 Chord Progressions** (Chords mode): I-V-vi-IV, I-IV-V, vi-IV-I-V, I-vi-IV-V, ii-V-I, I-V, I-IV
-- **Pattern Combinations**: A, AAAB, ABAC, ABBB, ABCD, AAABAAAC, ABACABAD
-- **Note Lengths**: 16n, 8n, 4n, 2n, 1n, 2m, 4m
-- **Pattern Reuse**: Generate variations or completely new patterns
+- **268 patterns** across 25 genres: AfroCub, Blues, Boogie, Bossa, ChaCha, Disco, Funk, Jazz, Pop, Reggae, Rock, Samba, Swing, Waltz, and more
+- **Ghost notes**: grace notes one 16th before hits at 1/3 velocity
+- **Complexity**: velocity variation and spontaneous fills on rests
+- **Variation**: strong-beat accents and probabilistic ghost notes
+- **Random mode**: picks a different pattern every press
+- Outputs to General MIDI drum note numbers by default (kick=36, snare=38, etc.)
 
 ## Installation
 
 ### macOS
 
-1. Download `Riff.control.js`
-2. Copy the file to: `~/Documents/Bitwig Studio/Controller Scripts/`
-3. Restart Bitwig Studio
-4. Go to **Settings → Controllers**
-5. Click **Add controller** and select **Scribbletune → Riff**
+1. Copy `Riff.control.js` and/or `Drummer.control.js` to:
+   `~/Documents/Bitwig Studio/Controller Scripts/`
+2. In Bitwig: **Preferences → Controllers → Add Controller**
+3. Search "Scribbletune" and add **Riff** and/or **Drummer**
 
 ### Windows
 
-1. Download `Riff.control.js`
-2. Copy the file to: `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\`
-3. Restart Bitwig Studio
-4. Go to **Settings → Controllers**
-5. Click **Add controller** and select **Riff**
+1. Copy the script(s) to:
+   `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\`
+2. In Bitwig: **Preferences → Controllers → Add Controller**
+3. Search "Scribbletune" and add **Riff** and/or **Drummer**
 
 ### Linux
 
-1. Download `Riff.control.js`
-2. Copy the file to: `~/Bitwig Studio/Controller Scripts/`
-3. Restart Bitwig Studio
-4. Go to **Settings → Controllers**
-5. Click **Add controller** and select **Riff**
+1. Copy the script(s) to: `~/Bitwig Studio/Controller Scripts/`
+2. In Bitwig: **Preferences → Controllers → Add Controller**
+3. Search "Scribbletune" and add **Riff** and/or **Drummer**
 
-## Quick Start
+## Quick Start — Riff
 
-1. Create or select an empty MIDI clip in the Bitwig arranger
-2. In the controller settings, configure your musical parameters:
-   - Choose your **Root Note** and **Octave**
-   - Select a **Scale** (e.g., Ionian for major, Aeolian for minor)
-   - Pick a **Pattern Style** (try "pulse" or "melody" to start)
-3. Click **Generate!**
-4. Listen and iterate - each click generates a fresh pattern
+1. Create a MIDI track with an instrument
+2. Create or select an empty arranger clip
+3. In the Riff controller panel: choose Root Note, Scale, and Pattern Style
+4. Click **Generate!** — each click produces a fresh pattern
 
-## The Bracket Notation System
+## Quick Start — Drummer
 
-Riff uses Scribbletune's bracket notation language to describe patterns:
+1. Create a MIDI track with a drum instrument
+2. Create a clip, select it, and double-click to make sure it's focused
+3. In the Drummer controller panel: choose Genre and Pattern (or leave on Random)
+4. Click **Generate!** — or **Random Pattern** to explore freely
+
+## The Bracket Notation System (Riff)
 
 - `x` = root note
 - `R` = random note from the scale
-- `-` = rest (silence)
-- `[...]` = subdivide (play the enclosed pattern twice as fast)
+- `-` = rest
+- `[...]` = subdivide (play twice as fast per nesting level)
 
-**Examples:**
-
-- `x-x-` = root, rest, root, rest (simple pulse)
-- `[xx]` = two quick root notes in one beat
-- `[x-][R-]` = quick root-rest, then quick random-rest
-- `[x[xx]]` = root note, then two super-quick root notes
-
-Brackets can be nested infinitely, creating complex rhythmic patterns from simple notation.
-
-## Contributing
-
-Contributions are welcome! Feel free to:
-
-- Report bugs or request features via [Issues](../../issues)
-- Submit pull requests with improvements
-- Share your favorite pattern combinations
-- Add new pattern styles or chord progressions
+Examples: `x-x-` · `[xx]` · `[x-][R-]` · `[x[xx]]`
 
 ## Development
 
-The script is written in JavaScript using Bitwig's Controller Script API v17.
+Both scripts are plain JavaScript, Bitwig Controller Script API v17, no build step.
 
-Key files:
+| File | Lines |
+|------|-------|
+| `Riff.control.js` | ~506 |
+| `Drummer.control.js` | ~635 |
 
-- `Riff.control.js` - Main controller script
-
-To modify:
-
-1. Edit `Riff.control.js`
-2. Copy to your Controller Scripts folder
-3. Restart Bitwig or reload the controller
+To modify: edit the file → copy to Controller Scripts folder → reload the controller in Bitwig.
 
 ## License
 
@@ -132,14 +89,13 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 Created by [Walmik Deshpande](https://github.com/walmik)
 
-Part of the [Scribbletune](https://scribbletune.com) project - a suite of tools for algorithmic music composition.
+Part of the [Scribbletune](https://scribbletune.com) project — a suite of tools for algorithmic music composition.
 
 ## Links
 
 - **Scribbletune**: https://scribbletune.com
 - **Demo Video**: https://www.youtube.com/watch?v=Pxa6T1t0Ips
 - **Issues & Support**: [GitHub Issues](../../issues)
-- **Other Scribbletune Projects**: https://github.com/scribbletune/plugins
 
 ---
 

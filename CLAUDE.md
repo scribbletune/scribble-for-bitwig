@@ -1,12 +1,13 @@
-# Riff for Bitwig — Developer Context
+# Scribbletune for Bitwig — Developer Context
 
 ## What this is
 
-A Bitwig Studio **controller extension** (API v17) that generates algorithmic MIDI patterns and writes them directly into the arranger clip currently under the cursor. Registered as vendor "Scribbletune", device name "Riff".
+Two Bitwig Studio **controller extensions** (API v17) that generate algorithmic MIDI and write directly into the arranger clip under the cursor. Both are registered as vendor "Scribbletune" and share the same single-file, no-build architecture.
 
-It is a **JavaScript port** of the [free AU & VST3 plugin `Riff` by Scribbletune](https://scribbletune.com/plugins/#riff-vst). The core musical logic (scales, pattern notation, chord generation) mirrors it. The delivery mechanism differs: the VST3 exports a drag-and-drop MIDI file; this script writes directly to a `cursorClip` via `setStep()`.
-
-Single implementation file: `Riff.control.js` (~506 lines, no build step, no npm packages).
+| Script | Device name | Purpose |
+|--------|-------------|---------|
+| `Riff.control.js` (~506 lines) | Riff | Melodic/chord pattern generator — JavaScript port of the [Riff VST3 plugin](https://scribbletune.com/plugins/#riff-vst) |
+| `Drummer.control.js` (~635 lines) | Drummer | Drum pattern generator — 268 patterns from the "260 Drum Machine Patterns" book, ported from the scribble-for-max Drummer device |
 
 ---
 
@@ -164,19 +165,18 @@ Falls back to the full scale if filtering produces an empty array.
 
 ## Installing and testing
 
-**Install** (macOS):
+**Install** (copy both files):
 
-```
-~/Documents/Bitwig Studio/Controller Scripts/Riff.control.js
-```
+- macOS: `~/Documents/Bitwig Studio/Controller Scripts/`
+- Windows: `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\`
 
-Windows: `%USERPROFILE%\Documents\Bitwig Studio\Controller Scripts\...`
+**Activate in Bitwig:** Preferences → Controllers → Add Controller → search "Scribbletune" → add Riff and/or Drummer
 
-**Activate in Bitwig:** Preferences → Controllers → Add Controller → Riff
+**Use (Riff):** Create or select an arranger clip → set parameters → click "Generate!"
 
-**Use:** Create or select an arranger clip → set parameters in the controller panel → click "Generate!"
+**Use (Drummer):** Create a MIDI track with a drum instrument → create/select a clip → set Genre/Pattern/Feel params → click "Generate!"
 
-**Test JS logic without Bitwig:** Mock the globals, then call the generation functions directly:
+**Test Riff JS logic without Bitwig:** Mock the globals, then call the generation functions directly:
 
 ```js
 // minimal mock
@@ -185,4 +185,56 @@ global.host = { println: console.log, showPopupNotification: () => {} };
 const notes = parseRiffPattern("x[R-]x-", 60, [60, 62, 64, 65, 67], 0, 0.25);
 ```
 
-`writeNotesToClip` can be verified by passing a mock clip object that records `setStep` calls.
+**Test Drummer JS logic without Bitwig:** The core functions (`selectPattern`, `buildDrumKit`, `parseDrumTrack`) have no Bitwig dependencies and can be called directly after loading `DRUM_PATTERNS` from the JSON source at `/Users/walmik/Github/iPlug2/Examples/Drummer/260-drum-machine-patterns.json`.
+
+`writeNotesToClip` can be verified in both scripts by passing a mock clip object that records `setStep` calls.
+
+---
+
+## Drummer — architecture
+
+Single implementation file: `Drummer.control.js` (no build step, no npm packages).
+
+### Data flow
+
+```
+Generate! signal
+  → genreParam / patternIndexParam / noteLengthParam / ... read from documentState
+  → selectPattern(genre, index)   → one of 268 DrumPattern objects
+  → buildDrumKit(baseOctave)      → { bd, sd, ch, ... } → MIDI note numbers
+  → buildDrumNotes(pattern, kit, noteLength, complexity, variation, ghostNotes, removeKick)
+      → parseDrumTrack() per instrument track
+  → notes[]  { channel, posInSixteenths, pitch, velocity, length }
+  → cursorClip.getLoopLength().setRaw(clipBeats)
+  → cursorClip.clearSteps()
+  → writeNotesToClip(notes, cursorClip)
+```
+
+### Key constants
+
+| Constant | Purpose |
+|----------|---------|
+| `DRUM_PATTERNS` | 268 patterns embedded inline (sourced from `260-drum-machine-patterns.json`) |
+| `DRUM_KIT_OFFSETS` | Instrument abbr → `{ semitones, velocity }`; MIDI note = `24 + octave*12 + semitones` |
+| `NOTE_DURATIONS` | `16n` → 0.25, `8n` → 0.5, `4n` → 1.0 beats per step |
+| `GENRES` | 25 genre names + "Random" used to populate the Genre dropdown |
+
+### Pattern notation (drum tracks)
+
+| Char | Meaning |
+|------|---------|
+| `x` | Hit at base velocity |
+| `X` | Accented hit (+20 velocity) |
+| `-` | Rest |
+| `[xx]` | Flam: one step, with optional grace note 1 sixteenth before (if Ghost Notes = On) |
+
+### MIDI mapping (Base Octave = 1, default)
+
+Matches General MIDI drum map: kick=36, snare=38, closed hi-hat=42, open hi-hat=46, crash=49.
+
+### Known gaps / areas to improve
+
+- **No undo support** — same as Riff; `clearSteps()` bypasses the undo stack
+- **Cursor dependency** — notes land in whichever clip the arranger cursor is on
+- **MIDI channel** — hardcoded to channel 0
+- **Pattern index in Random mode** — `patternIndex` param is ignored when Genre = Random (a fully random pick is made instead)
